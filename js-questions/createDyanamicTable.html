@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Table</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        button {
+            padding: 5px 10px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        .btn-delete {
+            background-color: red;
+            color: white;
+            border: none;
+        }
+
+        .btn-edit {
+            background-color: yellow;
+            border: none;
+        }
+
+        .btn-add {
+            background-color: green;
+            color: white;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <h2>Dynamic Table with Add, Edit, and Delete Features</h2>
+    <table id="dynamicTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Age</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <button class="btn-add" onclick="addRow()">Add Row</button>
+
+    <script>
+        function addRow() {
+            const table = document.getElementById('dynamicTable').getElementsByTagName('tbody')[0];
+            const row = table.insertRow();
+            for (let i = 0; i < 3; i++) {
+                const cell = row.insertCell(i);
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.placeholder = `Enter ${i === 0 ? 'Name' : i === 1 ? 'Email' : 'Age'}`;
+                cell.appendChild(input);
+            }
+            const actionsCell = row.insertCell(3);
+            const editButton = document.createElement('button');
+            editButton.className = 'btn-edit';
+            editButton.textContent = 'Edit';
+            editButton.onclick = () => editRow(row);
+
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'btn-delete';
+            deleteButton.textContent = 'Delete';
+            deleteButton.onclick = () => deleteRow(row);
+
+            actionsCell.appendChild(editButton);
+            actionsCell.appendChild(deleteButton);
+        }
+
+        function editRow(row) {
+            const cells = row.getElementsByTagName('td');
+            for (let i = 0; i < 3; i++) {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.value = cells[i].textContent;
+                cells[i].textContent = '';
+                cells[i].appendChild(input);
+            }
+            const actionCell = cells[3];
+            const saveButton = document.createElement('button');
+            saveButton.className = 'btn-edit';
+            saveButton.textContent = 'Save';
+            saveButton.onclick = () => saveRow(row);
+
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'btn-delete';
+            deleteButton.textContent = 'Delete';
+            deleteButton.onclick = () => deleteRow(row);
+
+            actionCell.innerHTML = ''; 
+            actionCell.appendChild(saveButton);
+            actionCell.appendChild(deleteButton);
+        }
+        function saveRow(row) {
+            const cells = row.getElementsByTagName('td');
+            for (let i = 0; i < 3; i++) {
+                const input = cells[i].getElementsByTagName('input')[0];
+                cells[i].textContent = input.value;
+            }
+            const actionCell = cells[3];
+            const editButton = document.createElement('button');
+            editButton.className = 'btn-edit';
+            editButton.textContent = 'Edit';
+            editButton.onclick = () => editRow(row);
+
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'btn-delete';
+            deleteButton.textContent = 'Delete';
+            deleteButton.onclick = () => deleteRow(row);
+
+            actionCell.innerHTML = '';
+            actionCell.appendChild(editButton);
+            actionCell.appendChild(deleteButton);
+        }
+        function deleteRow(row) {
+            const table = document.getElementById('dynamicTable').getElementsByTagName('tbody')[0];
+            table.deleteRow(row.rowIndex - 1); 
+        }
+    </script>
+</body>
+</html>
